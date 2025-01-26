@@ -1,0 +1,17 @@
+{
+  "@class": "org.apereo.cas.services.CasRegisteredService",
+  "id": 10000001,
+  "name": "HTC ReCAP Central Authentication Service",
+  "serviceId": "^(http?|https?|imaps?)://.*",
+  "description" : "This service definition authorizes all application urls that support HTTP protocols.",
+  "evaluationOrder": 10000,
+  "multifactorPolicy": {
+    "@class": "org.apereo.cas.services.DefaultRegisteredServiceMultifactorPolicy",
+    "multifactorAuthenticationProviders": [
+      "java.util.LinkedHashSet",
+      [
+        "mfa-simple"
+      ]
+    ]
+  }
+}
