@@ -303,7 +303,7 @@ dependencies {
     implementation "org.apereo.cas:cas-server-core-notifications-api"
     implementation 'org.springframework.boot:spring-boot-starter-mail'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-    implementation 'com.mysql:mysql-connector-j:8.0.31'
+    implementation 'com.mysql:mysql-connector-j:9.2.0'
     implementation "org.apereo.cas:cas-server-support-jpa-util"
     implementation "org.apereo.cas:cas-server-support-rest"
     implementation "org.apereo.cas:cas-server-support-actions"
