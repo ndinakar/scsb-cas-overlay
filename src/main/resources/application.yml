@@ -10,6 +10,7 @@ cas:
       watcher-enabled: true
   authn:
     pm:
+      enabled: true
       reset:
         crypto:
           enabled: false
@@ -61,7 +62,7 @@ cas:
 
 spring:
   mail:
-    host: smtp.gmail.com
+    host: ${EMAIL_HOST}
     from: ${MAIL_FROM}
     subject: "[ReCAP] CAS login token"
     sqlQuery: "SELECT email FROM users WHERE username = ?"
