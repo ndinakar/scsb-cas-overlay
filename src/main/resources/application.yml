@@ -103,7 +103,7 @@ logging:
   level:
     org:
       apereo:
-        cas: DEBUG
+        cas: INFO
       springframework:
-        security: DEBUG
+        security: INFO
 
