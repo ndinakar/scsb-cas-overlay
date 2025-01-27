@@ -3,7 +3,6 @@ server:
   ssl:
     key-store: 'classpath:/etc/cas/thekeystore'
     key-store-password: changeit
-#    enabled: false
 cas:
   service-registry:
     json:
@@ -11,15 +10,11 @@ cas:
       watcher-enabled: true
   authn:
     pm:
-      enabled: true
       reset:
         crypto:
           enabled: false
       core:
         enabled: false
-#        password-policy-pattern: ^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,10}
-#        webflow:
-#          enabled: true
     mfa:
       simple:
         token:
@@ -41,10 +36,10 @@ cas:
     jdbc:
       'query[0]':
         sql: SELECT password FROM users WHERE username=? and active=1
-        url: jdbc:mysql://scsb-mysql:3306/recapcas?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
+        url: ${DB_HOST}
         dialect: org.hibernate.dialect.MySQLDialect
-        user: tststage2
-        password: 7279ab68-cba6-4216-991a-f555f3d1bcac
+        user: ${DB_USER}
+        password: ${DB_PASSWORD}
         ddlAuto: none
         driverClass: com.mysql.cj.jdbc.Driver
         field-password: password
@@ -67,12 +62,12 @@ cas:
 spring:
   mail:
     host: smtp.gmail.com
-    from: dinakarn31@gmail.com
+    from: ${MAIL_FROM}
     subject: "[ReCAP] CAS login token"
     sqlQuery: "SELECT email FROM users WHERE username = ?"
-    username: dinakarn31@gmail.com
+    username: ${EMAIL_USER}
     protocol: smtp
-    password: nuytahahczippwot
+    password: ${EMAIL_PASS}
     port: 587
     testConnection: true
     default-encoding: UTF-8
@@ -85,9 +80,9 @@ spring:
           starttls:
             enable: 'true'
   datasource:
-    username: tststage2
-    url: jdbc:mysql://scsb-mysql:3306/recapcas?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC
-    password: 7279ab68-cba6-4216-991a-f555f3d1bcac
+    username: ${DB_USER}
+    url: ${DB_HOST}
+    password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
   jpa:
     hibernate:
