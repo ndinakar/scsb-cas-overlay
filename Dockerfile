@@ -5,7 +5,7 @@ FROM openjdk:21-jdk-slim
 WORKDIR /app
 
 # Copy the WAR file from your local machine to the container
-COPY cas.war /app/scsb-cas-overlay.war
+COPY build/libs/cas.war /app/scsb-cas-overlay.war
 
 # Expose the port on which your application will run
 EXPOSE 8080
