@@ -80,6 +80,7 @@ apply plugin: "io.freefair.war-overlay"
 apply plugin: "war"
 
 apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
 apply plugin: "io.freefair.lombok"
 
 
@@ -316,9 +317,16 @@ dependencies {
     implementation "org.apereo.cas:cas-server-support-account-mgmt-api"
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
-    //implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+//    implementation 'com.github.ulisesbocchio:jasypt-spring-boot-starter:3.0.5'
+//    implementation "org.apereo.cas:cas-server-webapp-config-server"
+//    implementation "org.apereo.cas:cas-server-support-configuration-cloud-rest:${casVersion}"
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
 }
-
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}

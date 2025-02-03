@@ -98,7 +98,13 @@ spring:
     spring-el-compiler: false
     encoding: UTF-8
     mode: HTML
-
+  config:
+    import: optional:configserver:http://localhost:8888  # Config Server URL
+#  profiles:
+#    active: dev        # Profile (e.g., dev, prod)
+  cloud:
+    config:
+      fail-fast: true  # Fail startup if Config Server is unreachable
 logging:
   level:
     org:
