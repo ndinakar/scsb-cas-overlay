@@ -81,7 +81,7 @@ spring:
           starttls:
             enable: 'true'
   datasource:
-    username: ${DB_USER1}
+    username: ${DB_USER_TST}
     url: ${DB_HOST}
     password: ${DB_PASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
