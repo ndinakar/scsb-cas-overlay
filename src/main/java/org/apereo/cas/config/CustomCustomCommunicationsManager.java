@@ -9,6 +9,7 @@ import org.apereo.cas.notifications.mail.EmailCommunicationResult;
 import org.apereo.cas.notifications.mail.EmailMessageRequest;
 import org.apereo.cas.notifications.sms.SmsRequest;
 import org.apereo.cas.notifications.sms.SmsSender;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -24,6 +25,7 @@ import java.util.List;
 
 @Slf4j
 public class CustomCustomCommunicationsManager implements CommunicationsManager {
+    @Autowired
     private SmsSender smsSender;
     private JavaMailSender javaMailSender;
     private final JdbcTemplate jdbcTemplate;
@@ -31,13 +33,12 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     private final String mailSubject;
     private final String sqlQuery;
 
-    public CustomCustomCommunicationsManager(SmsSender smsSender, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
+    public CustomCustomCommunicationsManager(JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
         this.javaMailSender = javaMailSender;
         this.jdbcTemplate = jdbcTemplate;
         this.from = from;
         this.mailSubject = mailSubject;
         this.sqlQuery = sqlQuery;
-        this.smsSender = smsSender;
     }
 
     @Override

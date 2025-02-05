@@ -3,7 +3,6 @@ package org.apereo.cas.config;
 
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.notifications.CommunicationsManager;
-import org.apereo.cas.notifications.sms.SmsSender;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -47,8 +46,8 @@ public class CasOverlayOverrideConfiguration {
 
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
     @Bean
-    public CommunicationsManager communicationsManager(SmsSender smsSender, JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new CustomCustomCommunicationsManager(smsSender,javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
+    public CommunicationsManager communicationsManager(JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
+        return new CustomCustomCommunicationsManager(javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
     }
 
     @Bean
