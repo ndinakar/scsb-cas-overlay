@@ -59,12 +59,12 @@ cas:
     header:
       xframe: true
       xss: true
-  sms-provider:
-    sns:
-      endpoint: ${SNS_END_POINT}
-      credential-secret-key: ${SNS_SECRET}
-      region: ${SNS_REGION}
-      credential-access-key: ${SNS_ACCESS}
+#  sms-provider:
+#    sns:
+#      endpoint: ${SNS_END_POINT}
+#      credential-secret-key: ${SNS_SECRET}
+#      region: ${SNS_REGION}
+#      credential-access-key: ${SNS_ACCESS}
 spring:
   mail:
     host: ${EMAIL_HOST}
