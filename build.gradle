@@ -321,6 +321,7 @@ dependencies {
 //    implementation "org.apereo.cas:cas-server-webapp-config-server"
 //    implementation "org.apereo.cas:cas-server-support-configuration-cloud-rest:${casVersion}"
     implementation "org.springframework.cloud:spring-cloud-starter-config"
+    implementation "org.apereo.cas:cas-server-support-sms-aws-sns"
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 

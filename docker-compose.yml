@@ -21,6 +21,10 @@ services:
       - EMAIL_USER=${EMAIL_USER}
       - EMAIL_HOST=${EMAIL_HOST}
       - DB_USER_TST=${DB_USER_TST}
+      - SNS_END_POINT=${SNS_END_POINT}
+      - SNS_SECRET=${SNS_SECRET}
+      - SNS_REGION=${SNS_REGION}
+      - SNS_ACCESS=${SNS_ACCESS}
 #      - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
     restart: unless-stopped
     networks:
