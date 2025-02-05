@@ -44,12 +44,13 @@ public class CasOverlayOverrideConfiguration {
 
     @Value("${spring.mail.sqlQuery}")
     private String sqlQuery;
+
     @Autowired
-    private SmsService smsService;
+    public SmsService smsService;
 
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
     @Bean
-    public CommunicationsManager communicationsManager(SmsService smsService,JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public CommunicationsManager communicationsManager(JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new CustomCustomCommunicationsManager(smsService,javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
     }
 
@@ -67,9 +68,5 @@ public class CasOverlayOverrideConfiguration {
         return new JdbcTemplate(dataSource);
     }
 
-    @Bean
-    public SmsService smsService(){
-        return new SmsService();
-    }
 
 }
