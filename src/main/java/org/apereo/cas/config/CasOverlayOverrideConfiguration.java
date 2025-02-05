@@ -49,7 +49,7 @@ public class CasOverlayOverrideConfiguration {
 
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
     @Bean
-    public CommunicationsManager communicationsManager(@Qualifier("smsService")  SmsService smsService,JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
+    public CommunicationsManager communicationsManager(SmsService smsService,JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
         return new CustomCustomCommunicationsManager(smsService,javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
     }
 
