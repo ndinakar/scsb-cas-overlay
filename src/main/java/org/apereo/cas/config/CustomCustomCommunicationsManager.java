@@ -24,20 +24,18 @@ import java.util.List;
 @Slf4j
 public class CustomCustomCommunicationsManager implements CommunicationsManager {
 
-    private SmsService smsService;
     private JavaMailSender javaMailSender;
     private final JdbcTemplate jdbcTemplate;
     private final String from;
     private final String mailSubject;
     private final String sqlQuery;
 
-    public CustomCustomCommunicationsManager(SmsService smsService, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
+    public CustomCustomCommunicationsManager(JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
         this.javaMailSender = javaMailSender;
         this.jdbcTemplate = jdbcTemplate;
         this.from = from;
         this.mailSubject = mailSubject;
         this.sqlQuery = sqlQuery;
-        this.smsService = smsService;
     }
 
     @Override
@@ -129,7 +127,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     public boolean sms(SmsRequest smsRequest) {
         LOGGER.info("SMS send method invoked");
         try {
-            smsService.sendToken(smsRequest.getText(),"9164283325");
+           // smsService.sendToken(smsRequest.getText(),"9164283325");
         } catch (Throwable e) {
             LOGGER.info("Exception occurred while sending sms, message is: {}",e.getMessage());
         }
