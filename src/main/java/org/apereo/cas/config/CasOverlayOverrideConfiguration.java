@@ -67,4 +67,9 @@ public class CasOverlayOverrideConfiguration {
         return new JdbcTemplate(dataSource);
     }
 
+    @Bean
+    public SmsService smsService(){
+        return new SmsService();
+    }
+
 }
