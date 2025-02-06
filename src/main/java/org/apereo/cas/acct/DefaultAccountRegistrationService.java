@@ -24,8 +24,7 @@ import java.io.*;
 @Service
 public class DefaultAccountRegistrationService implements AccountRegistrationService {
 
-/*    @Value("${user.path}")
-    private String userPath;*/
+
     private final AccountRegistrationPropertyLoader accountRegistrationPropertyLoader;
 
     private final CasConfigurationProperties casProperties;
@@ -36,8 +35,6 @@ public class DefaultAccountRegistrationService implements AccountRegistrationSer
 
     private  AccountRegistrationProvisioner accountRegistrationProvisioner;
 
-/*    @Autowired(required = true)
-    private DataSourceUtil dataSourceUtil;*/
 
     @Override
     public AccountRegistrationRequest validateToken(final String token) throws Exception {
@@ -56,7 +53,6 @@ public class DefaultAccountRegistrationService implements AccountRegistrationSer
 
         try {
             String tempDir = System.getProperty("java.io.tmpdir");
-         /*   LOGGER.info("User Path is: {}",userPath);*/
             FileOutputStream fos = new FileOutputStream(tempDir+"user.ser");
             ObjectOutputStream oos = new ObjectOutputStream(fos);
             oos.writeObject(user);

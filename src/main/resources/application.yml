@@ -36,7 +36,7 @@ cas:
       users: null
     jdbc:
       'query[0]':
-        sql: SELECT password FROM users WHERE username=? and active=1
+        sql: SELECT password, email, phone FROM users WHERE username=? and active=1
         url: ${DB_HOST}
         dialect: org.hibernate.dialect.MySQLDialect
         user: ${DB_USER}
@@ -49,6 +49,16 @@ cas:
           encoding-algorithm: MD5
           character-encoding: UTF-8
           secret: recap
+        attributes:
+          email: email
+          phone: phone
+    attribute-repository:
+      jdbc[0]:
+        order: '0'
+        attributes:
+          email: email
+          phone: phone
+        singleRow: 'true'
   webflow:
     auto-configuration:
       order: '0'
@@ -59,12 +69,6 @@ cas:
     header:
       xframe: true
       xss: true
-#  sms-provider:
-#    sns:
-#      endpoint: ${SNS_END_POINT}
-#      credential-secret-key: ${SNS_SECRET}
-#      region: ${SNS_REGION}
-#      credential-access-key: ${SNS_ACCESS}
 spring:
   mail:
     host: ${EMAIL_HOST}

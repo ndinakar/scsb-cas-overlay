@@ -92,13 +92,13 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                 jdbcTemplate.update(sql, new Object[]{user.getUsername(),
                         MD5EncoderUtil.getMD5EncodingString(user.getPassword()),
                         user.getEmail(), user.getFirstName(), user.getLastName()});
-                LOGGER.info("User registered successfully");
             } catch (DataAccessException e) {
                 LOGGER.info("Exception occurred while save user details:{}",e.getMessage());
             }
             return EmailCommunicationResult.builder().success(true).build();
         } else {
             username = emailRequest.getPrincipal().getId();
+            LOGGER.info("Attributes EMAIL are : {}",emailRequest.getAttribute());
         }
         List<String> emails = new ArrayList<>();
         try {
@@ -135,6 +135,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                 .withMessage(smsRequest.getText())
                 .withPhoneNumber(fullPhoneNumber);
         try {
+            LOGGER.info("Attributes SMS are : {}",smsRequest.getAttribute());
             PublishResult result = snsClient.publish(publishRequest);
             LOGGER.info("Message sent with message ID: " + result.getMessageId());
         } catch (Exception e) {
