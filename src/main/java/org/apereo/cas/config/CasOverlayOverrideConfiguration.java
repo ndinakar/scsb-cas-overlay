@@ -1,6 +1,10 @@
 package org.apereo.cas.config;
 
 
+import com.amazonaws.auth.AWSStaticCredentialsProvider;
+import com.amazonaws.auth.BasicAWSCredentials;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClientBuilder;
 import org.apereo.cas.configuration.CasConfigurationProperties;
 import org.apereo.cas.notifications.CommunicationsManager;
 import org.slf4j.Logger;
@@ -12,7 +16,6 @@ import org.springframework.boot.jdbc.DataSourceBuilder;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.ScopedProxyMode;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -21,7 +24,6 @@ import javax.sql.DataSource;
 
 @Configuration(value = "CasOverlayOverrideConfiguration", proxyBeanMethods = false)
 @EnableConfigurationProperties(CasConfigurationProperties.class)
-@Import(SnsSmsSenderConfig.class)
 public class CasOverlayOverrideConfiguration {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(CasOverlayOverrideConfiguration.class);
@@ -46,11 +48,19 @@ public class CasOverlayOverrideConfiguration {
     @Value("${spring.mail.sqlQuery}")
     private String sqlQuery;
 
+    @Value("${aws.accessKeyId}")
+    private String awsAccessKeyId;
+
+    @Value("${aws.secretAccessKey}")
+    private String awsSecretAccessKey;
+
+    @Value("${aws.sns.region}")
+    private String awsRegion;
 
     @RefreshScope(proxyMode = ScopedProxyMode.DEFAULT)
     @Bean
-    public CommunicationsManager communicationsManager(SnsSmsSender snsSmsSender, JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
-        return new CustomCustomCommunicationsManager(snsSmsSender,javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
+    public CommunicationsManager communicationsManager(AmazonSNS snsClient, JavaMailSender javaMailSender, @Qualifier("jdbcTemplate") JdbcTemplate jdbcTemplate) {
+        return new CustomCustomCommunicationsManager(snsClient,javaMailSender,jdbcTemplate,from,mailSubject,sqlQuery);
     }
 
     @Bean
@@ -67,5 +77,13 @@ public class CasOverlayOverrideConfiguration {
         return new JdbcTemplate(dataSource);
     }
 
+    @Bean
+    public AmazonSNS snsClient() {
+        BasicAWSCredentials awsCredentials = new BasicAWSCredentials(awsAccessKeyId, awsSecretAccessKey);
 
+            return AmazonSNSClientBuilder.standard()
+                .withRegion(awsRegion)
+                .withCredentials(new AWSStaticCredentialsProvider(awsCredentials))
+                .build();
+    }
 }

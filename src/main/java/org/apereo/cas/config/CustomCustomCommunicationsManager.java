@@ -1,5 +1,8 @@
 package org.apereo.cas.config;
 
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.model.PublishRequest;
+import com.amazonaws.services.sns.model.PublishResult;
 import entity.User;
 import lombok.extern.slf4j.Slf4j;
 import org.apereo.cas.authentication.principal.Principal;
@@ -24,20 +27,20 @@ import java.util.List;
 @Slf4j
 public class CustomCustomCommunicationsManager implements CommunicationsManager {
 
-    private SnsSmsSender snsSmsSender;
+    private AmazonSNS snsClient;
     private JavaMailSender javaMailSender;
     private final JdbcTemplate jdbcTemplate;
     private final String from;
     private final String mailSubject;
     private final String sqlQuery;
 
-    public CustomCustomCommunicationsManager(SnsSmsSender snsSmsSender, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
+    public CustomCustomCommunicationsManager(AmazonSNS snsClient, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
         this.javaMailSender = javaMailSender;
         this.jdbcTemplate = jdbcTemplate;
         this.from = from;
         this.mailSubject = mailSubject;
         this.sqlQuery = sqlQuery;
-        this.snsSmsSender = snsSmsSender;
+        this.snsClient = snsClient;
     }
 
     @Override
@@ -127,11 +130,15 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
-        LOGGER.info("SMS send method invoked");
+        String fullPhoneNumber = "+919164283325";
+        PublishRequest publishRequest = new PublishRequest()
+                .withMessage(smsRequest.getText())
+                .withPhoneNumber(fullPhoneNumber);
         try {
-            snsSmsSender.send("","9164283325",smsRequest.getText());
-        } catch (Throwable e) {
-            LOGGER.info("Exception occurred while sending sms, message is: {}",e.getMessage());
+            PublishResult result = snsClient.publish(publishRequest);
+            System.out.println("Message sent with message ID: " + result.getMessageId());
+        } catch (Exception e) {
+            System.err.println("Error sending SMS: " + e.getMessage());
         }
         return true;
     }
