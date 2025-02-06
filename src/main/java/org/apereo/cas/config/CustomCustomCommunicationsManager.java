@@ -133,7 +133,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     @Override
     public boolean sms(SmsRequest smsRequest) {
         List<String> phones = new ArrayList<>();
-        String sql ="SELECT email FROM users WHERE username = ?";
+        String sql ="SELECT phone FROM users WHERE username = ?";
         String username = smsRequest.getPrincipal().getId();
         try {
             phones = jdbcTemplate.query(
