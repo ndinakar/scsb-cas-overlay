@@ -129,6 +129,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
+        LOGGER.info("ATTRIBUTES are : {}", smsRequest.getPrincipal().getAttributes().getOrDefault("email", Collections.singletonList("email")));
         List<String> phones = new ArrayList<>();
         String sql = "SELECT phone FROM users WHERE username = ?";
         String username = smsRequest.getPrincipal().getId();
@@ -154,7 +155,6 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
             try {
                 PublishResult result = snsClient.publish(publishRequest);
                 LOGGER.info("SMS sending to : {} and token is {}", fullPhoneNumber,smsRequest.getText());
-                LOGGER.info(result.getMessageId()  + " Message sent. Status was " + result.getSdkHttpMetadata().getHttpStatusCode());
             } catch (Exception e) {
                 LOGGER.info("Exception while sending SMS: {}", e.getMessage());
             }
