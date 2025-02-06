@@ -52,26 +52,6 @@ cas:
         attributes:
           email: email
           phone: phone
-    attribute-repository:
-      jdbc[0]:
-        order: '0'
-        attributes:
-          email: email
-          phone: phone
-        singleRow: 'true'
-        password: ${DB_PASSWORD}
-        driverClass: com.mysql.cj.jdbc.Driver
-#        column-mappings: uid=username, email=email, phone=phone
-        username: ${DB_USER}
-        dialect: org.hibernate.dialect.YourDialect
-        caseCanonicalization: NONE
-        url: ${DB_HOST}
-        sql: SELECT * FROM users WHERE username=? and active=1
-#  person-directory:
-#    active-attribute-repository-ids: jdbc
-#    attribute-resolution-enabled: 'true'
-#    attribute-repository-selection: default=jdbc
-
   webflow:
     auto-configuration:
       order: '0'
@@ -121,9 +101,7 @@ spring:
     encoding: UTF-8
     mode: HTML
   config:
-    import: optional:configserver:http://localhost:8888  # Config Server URL
-#  profiles:
-#    active: dev        # Profile (e.g., dev, prod)
+    import: optional:configserver:http://localhost:8888
   cloud:
     config:
       fail-fast: true  # Fail startup if Config Server is unreachable
@@ -134,11 +112,6 @@ logging:
         cas: DEBUG
       springframework:
         security: DEBUG
-
-#jasypt:
-#  encryptor:
-#    password: ${JASYPT_ENCRYPTOR_PASSWORD}
-
 aws:
   sns:
     region: ${SNS_REGION}
