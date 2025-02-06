@@ -8,7 +8,6 @@ import org.apereo.cas.notifications.call.PhoneCallRequest;
 import org.apereo.cas.notifications.mail.EmailCommunicationResult;
 import org.apereo.cas.notifications.mail.EmailMessageRequest;
 import org.apereo.cas.notifications.sms.SmsRequest;
-import org.apereo.cas.notifications.sms.SmsSender;
 import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.SimpleMailMessage;
@@ -25,20 +24,20 @@ import java.util.List;
 @Slf4j
 public class CustomCustomCommunicationsManager implements CommunicationsManager {
 
-    private SmsSender smsSender;
+    private SnsSmsSender snsSmsSender;
     private JavaMailSender javaMailSender;
     private final JdbcTemplate jdbcTemplate;
     private final String from;
     private final String mailSubject;
     private final String sqlQuery;
 
-    public CustomCustomCommunicationsManager(SmsSender smsSender, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
+    public CustomCustomCommunicationsManager(SnsSmsSender snsSmsSender, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
         this.javaMailSender = javaMailSender;
         this.jdbcTemplate = jdbcTemplate;
         this.from = from;
         this.mailSubject = mailSubject;
         this.sqlQuery = sqlQuery;
-        this.smsSender = smsSender;
+        this.snsSmsSender = snsSmsSender;
     }
 
     @Override
@@ -130,7 +129,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     public boolean sms(SmsRequest smsRequest) {
         LOGGER.info("SMS send method invoked");
         try {
-            smsSender.send("","9164283325","Hai");
+            snsSmsSender.send("","9164283325",smsRequest.getText());
         } catch (Throwable e) {
             LOGGER.info("Exception occurred while sending sms, message is: {}",e.getMessage());
         }

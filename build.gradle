@@ -323,6 +323,7 @@ dependencies {
     implementation "org.springframework.cloud:spring-cloud-starter-config"
     //implementation "io.awsspring.cloud:spring-cloud-aws-sns:2.3.0"
     //implementation "org.apereo.cas:cas-server-support-sms-aws-sns"
+    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.300'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 

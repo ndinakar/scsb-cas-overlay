@@ -121,3 +121,10 @@ logging:
 #jasypt:
 #  encryptor:
 #    password: ${JASYPT_ENCRYPTOR_PASSWORD}
+
+aws:
+  sns:
+    region: ${SNS_REGION}
+    phone-number: ''
+  secretAccessKey: ${SNS_SECRET}
+  accessKeyId: ${SNS_ACCESS}
