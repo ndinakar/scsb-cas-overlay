@@ -99,8 +99,6 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
             return EmailCommunicationResult.builder().success(true).build();
         } else {
             username = emailRequest.getPrincipal().getId();
-            LOGGER.info("Attributes EMAIL are : {}",emailRequest.getAttribute());
-            LOGGER.info("Attributes EMAIL are : {}",emailRequest.getPrincipal().getAttributes().getOrDefault("email", Collections.singletonList("email")));
         }
         List<String> emails = new ArrayList<>();
         try {
@@ -123,7 +121,6 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
         message.setText(emailRequest.getBody());
         try {
             javaMailSender.send(message);
-            LOGGER.info("Email has sent to :{},{}",emails.get(0),emailRequest.getPrincipal());
         } catch (Exception e) {
             LOGGER.info("Exception occurred while sending email to: {}, message is: {}", emails.get(0),e.getMessage());
         }
@@ -133,28 +130,32 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     @Override
     public boolean sms(SmsRequest smsRequest) {
         List<String> phones = new ArrayList<>();
-        String sql ="SELECT phone FROM users WHERE username = ?";
+        String sql = "SELECT phone FROM users WHERE username = ?";
         String username = smsRequest.getPrincipal().getId();
-        try {
-            phones = jdbcTemplate.query(
-                    sql,
-                    new Object[]{username},
-                    (rs, rowNum) -> rs.getString("phone")
-            );
-        } catch (Exception e) {
-            LOGGER.info("Exception occurred while pulling phone for user: {}", username);
+        if (null != username && !username.isEmpty()) {
+            try {
+                phones = jdbcTemplate.query(
+                        sql,
+                        new Object[]{username},
+                        (rs, rowNum) -> rs.getString("phone")
+                );
+            } catch (Exception e) {
+                LOGGER.info("Exception occurred while pulling phone for user: {}", username);
+            }
         }
-        String fullPhoneNumber = phones.get(0);
-        PublishRequest publishRequest = new PublishRequest()
-                .withMessage(smsRequest.getText())
-                .withPhoneNumber(fullPhoneNumber);
-        try {
-            LOGGER.info("Attributes SMS are : {}",smsRequest.getAttribute());
-            LOGGER.info("username is : {}",smsRequest.getPrincipal().getId());
-            PublishResult result = snsClient.publish(publishRequest);
-            LOGGER.info("Message sent with message ID: " + result.getMessageId());
-        } catch (Exception e) {
-            LOGGER.info("Error sending SMS: " + e.getMessage());
+        if (phones.isEmpty()) {
+            LOGGER.info("Mobile Number is not available for user: {}", username);
+            return true;
+        } else {
+            String fullPhoneNumber = phones.get(0);
+            PublishRequest publishRequest = new PublishRequest()
+                    .withMessage("Hello! Your requested CAS token is " +smsRequest.getText())
+                    .withPhoneNumber(fullPhoneNumber);
+            try {
+                snsClient.publish(publishRequest);
+            } catch (Exception e) {
+                LOGGER.info("Exception while sending SMS: {}", e.getMessage());
+            }
         }
         return true;
     }
