@@ -318,7 +318,7 @@ dependencies {
     implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
     implementation "org.apereo.cas:cas-server-support-json-service-registry"
     implementation "org.springframework.cloud:spring-cloud-starter-config"
-    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.300'
+    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.780'
 
     testImplementation "org.springframework.boot:spring-boot-starter-test"
 
