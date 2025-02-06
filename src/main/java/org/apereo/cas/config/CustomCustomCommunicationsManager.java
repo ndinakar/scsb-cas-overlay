@@ -136,9 +136,9 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                 .withPhoneNumber(fullPhoneNumber);
         try {
             PublishResult result = snsClient.publish(publishRequest);
-            System.out.println("Message sent with message ID: " + result.getMessageId());
+            LOGGER.info("Message sent with message ID: " + result.getMessageId());
         } catch (Exception e) {
-            System.err.println("Error sending SMS: " + e.getMessage());
+            LOGGER.info("Error sending SMS: " + e.getMessage());
         }
         return true;
     }
