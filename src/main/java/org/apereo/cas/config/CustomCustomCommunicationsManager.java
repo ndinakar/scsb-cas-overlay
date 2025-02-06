@@ -132,12 +132,25 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
-        String fullPhoneNumber = "+919164283325";
+        List<String> phones = new ArrayList<>();
+        String sql ="SELECT email FROM users WHERE username = ?";
+        String username = smsRequest.getPrincipal().getId();
+        try {
+            phones = jdbcTemplate.query(
+                    sqlQuery,
+                    new Object[]{username},
+                    (rs, rowNum) -> rs.getString("phone")
+            );
+        } catch (Exception e) {
+            LOGGER.info("Exception occurred while pulling phone for user: {}", username);
+        }
+        String fullPhoneNumber = phones.get(0);
         PublishRequest publishRequest = new PublishRequest()
                 .withMessage(smsRequest.getText())
                 .withPhoneNumber(fullPhoneNumber);
         try {
             LOGGER.info("Attributes SMS are : {}",smsRequest.getAttribute());
+            LOGGER.info("username is : {}",smsRequest.getPrincipal().getId());
             PublishResult result = snsClient.publish(publishRequest);
             LOGGER.info("Message sent with message ID: " + result.getMessageId());
         } catch (Exception e) {
