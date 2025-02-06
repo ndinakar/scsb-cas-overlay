@@ -137,7 +137,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
         String username = smsRequest.getPrincipal().getId();
         try {
             phones = jdbcTemplate.query(
-                    sqlQuery,
+                    sql,
                     new Object[]{username},
                     (rs, rowNum) -> rs.getString("phone")
             );
