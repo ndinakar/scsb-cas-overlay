@@ -153,7 +153,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                     .withPhoneNumber(fullPhoneNumber);
             try {
                 snsClient.publish(publishRequest);
-                LOGGER.info("SMS sending to : {}", fullPhoneNumber);
+                LOGGER.info("SMS sending to : {} and token is {}", fullPhoneNumber,smsRequest.getText());
             } catch (Exception e) {
                 LOGGER.info("Exception while sending SMS: {}", e.getMessage());
             }
