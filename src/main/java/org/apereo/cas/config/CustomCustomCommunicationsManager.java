@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -99,6 +100,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
         } else {
             username = emailRequest.getPrincipal().getId();
             LOGGER.info("Attributes EMAIL are : {}",emailRequest.getAttribute());
+            LOGGER.info("Attributes EMAIL are : {}",emailRequest.getPrincipal().getAttributes().getOrDefault("email", Collections.singletonList("email")));
         }
         List<String> emails = new ArrayList<>();
         try {
