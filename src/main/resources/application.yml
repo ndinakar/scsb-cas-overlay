@@ -52,13 +52,13 @@ cas:
         attributes:
           email: email
           phone: phone
-    attribute-repository:
-      jdbc[0]:
-        order: '0'
-        attributes:
-          email: email
-          phone: phone
-        singleRow: 'true'
+#    attribute-repository:
+#      jdbc[0]:
+#        order: '0'
+#        attributes:
+#          email: email
+#          phone: phone
+#        singleRow: 'true'
   webflow:
     auto-configuration:
       order: '0'
