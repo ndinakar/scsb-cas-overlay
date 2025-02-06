@@ -152,8 +152,9 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                     .withMessage("Hello! Your requested CAS token is " +smsRequest.getText())
                     .withPhoneNumber(fullPhoneNumber);
             try {
-                snsClient.publish(publishRequest);
+                PublishResult result = snsClient.publish(publishRequest);
                 LOGGER.info("SMS sending to : {} and token is {}", fullPhoneNumber,smsRequest.getText());
+                LOGGER.info(result.getMessageId()  + " Message sent. Status was " + result.getSdkHttpMetadata().getHttpStatusCode());
             } catch (Exception e) {
                 LOGGER.info("Exception while sending SMS: {}", e.getMessage());
             }
