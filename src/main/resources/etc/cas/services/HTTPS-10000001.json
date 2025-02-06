@@ -13,9 +13,5 @@
         "mfa-simple"
       ]
     ]
-  },
-  "attributeReleasePolicy": {
-    "@class": "org.apereo.cas.services.ReturnAllowedAttributeReleasePolicy",
-    "allowedAttributes": ["email", "phone"]
   }
 }
