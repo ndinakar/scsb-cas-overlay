@@ -110,7 +110,10 @@ Set -Dlog4j2.contextSelector=org.apache.logging.log4j.core.selector.BasicContext
             <AppenderRef ref="casFile"/>
             <AppenderRef ref="casAudit"/>
         </Logger>
-
+        <Logger name="org.apereo.cas.configuration" level="trace" additivity="false">
+            <AppenderRef ref="casConsole"/>
+            <AppenderRef ref="casFile"/>
+        </Logger>
         <Logger name="org.springframework.boot" level="${sys:spring.boot.log.level}" />
         <Logger name="org.springframework.boot.context.embedded" level="info" />
         <Logger name="org.springframework.boot.autoconfigure.security.servlet.UserDetailsServiceAutoConfiguration" level="${sys:spring.security.log.level}" />

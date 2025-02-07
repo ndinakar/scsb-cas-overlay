@@ -80,6 +80,7 @@ apply plugin: "io.freefair.war-overlay"
 apply plugin: "war"
 
 apply plugin: "org.springframework.boot"
+apply plugin: "io.spring.dependency-management"
 apply plugin: "io.freefair.lombok"
 
 
@@ -296,10 +297,34 @@ dependencies {
      * since versions are all resolved and controlled by the dependency management
      * plugin via the CAS bom.
      **/
+    implementation 'org.apereo.cas:cas-server-support-jdbc'
+    implementation 'org.apereo.cas:cas-server-support-jdbc-drivers'
+    implementation "org.apereo.cas:cas-server-support-simple-mfa"
+    implementation "org.apereo.cas:cas-server-core-notifications"
+    implementation "org.apereo.cas:cas-server-core-notifications-api"
+    implementation 'org.springframework.boot:spring-boot-starter-mail'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'com.mysql:mysql-connector-j:8.0.31'
+    implementation "org.apereo.cas:cas-server-support-jpa-util"
     implementation "org.apereo.cas:cas-server-support-rest"
+    implementation "org.apereo.cas:cas-server-support-actions"
+    implementation "org.apereo.cas:cas-server-support-thymeleaf"
+    implementation "org.apereo.cas:cas-server-support-rest-authentication"
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "org.apereo.cas:cas-server-support-pm-core"
+    implementation "org.apereo.cas:cas-server-support-pm-webflow"
+    implementation "org.apereo.cas:cas-server-support-account-mgmt"
+    implementation "org.apereo.cas:cas-server-support-account-mgmt-api"
+    implementation 'jakarta.persistence:jakarta.persistence-api:3.1.0'
+    implementation "org.apereo.cas:cas-server-support-json-service-registry"
+    implementation "org.springframework.cloud:spring-cloud-starter-config"
+    implementation 'com.amazonaws:aws-java-sdk-sns:1.12.780'
 
-
-    
     testImplementation "org.springframework.boot:spring-boot-starter-test"
-}
 
+}
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
+    }
+}
