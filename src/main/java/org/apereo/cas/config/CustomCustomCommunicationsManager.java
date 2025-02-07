@@ -88,7 +88,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                 LOGGER.info(ScsbCasConstants.EXCEPTION_USER_REGISTRATION, e.getMessage());
             }
             String sql = "INSERT INTO USERS " +
-                    "(USERNAME, PASSWORD, EMAIL, PHONE, FIRSTNAME, LASTNAME) VALUES (?, ?,?, ?, ?)";
+                    "(USERNAME, PASSWORD, EMAIL, PHONE, FIRSTNAME, LASTNAME) VALUES (?, ?, ?, ?, ?, ?)";
             try {
                 jdbcTemplate.update(sql, new Object[]{user.getUsername(),
                         MD5EncoderUtil.getMD5EncodingString(user.getPassword()),
@@ -129,33 +129,36 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
-        List<String> phones = new ArrayList<>();
-        String sqlMobile = ScsbCasConstants.SQL_MOBILE;
-        String username = smsRequest.getPrincipal().getId();
-        if (null != username && !username.isEmpty()) {
-            try {
-                phones = jdbcTemplate.query(
-                        sqlMobile,
-                        new Object[]{username},
-                        (rs, rowNum) -> rs.getString("phone")
-                );
-            } catch (Exception e) {
-                LOGGER.info(ScsbCasConstants.EXCEPTION_MESSAGE, "Mobile Number", username);
+        if (smsRequest.getPrincipal() == null) {
+            List<String> phones = new ArrayList<>();
+            String sqlMobile = ScsbCasConstants.SQL_MOBILE;
+            String username = smsRequest.getPrincipal().getId();
+            if (null != username && !username.isEmpty()) {
+                try {
+                    phones = jdbcTemplate.query(
+                            sqlMobile,
+                            new Object[]{username},
+                            (rs, rowNum) -> rs.getString("phone")
+                    );
+                } catch (Exception e) {
+                    LOGGER.info(ScsbCasConstants.EXCEPTION_MESSAGE, "Mobile Number", username);
+                }
             }
-        }
-        if (phones.isEmpty()) {
-            LOGGER.info(ScsbCasConstants.NOT_AVAILABLE, "Mobile Number", username);
+            if (phones.isEmpty()) {
+                LOGGER.info(ScsbCasConstants.NOT_AVAILABLE, "Mobile Number", username);
+                return true;
+            } else {
+                String fullPhoneNumber = phones.get(0);
+                PublishRequest publishRequest = new PublishRequest()
+                        .withMessage("Hello! Your requested CAS token is " + smsRequest.getText())
+                        .withPhoneNumber(fullPhoneNumber);
+                try {
+                    PublishResult result = snsClient.publish(publishRequest);
+                } catch (Exception e) {
+                    LOGGER.info(ScsbCasConstants.EXCEPTION, "SMS", e.getMessage());
+                }
+            }
             return true;
-        } else {
-            String fullPhoneNumber = phones.get(0);
-            PublishRequest publishRequest = new PublishRequest()
-                    .withMessage("Hello! Your requested CAS token is " + smsRequest.getText())
-                    .withPhoneNumber(fullPhoneNumber);
-            try {
-                PublishResult result = snsClient.publish(publishRequest);
-            } catch (Exception e) {
-                LOGGER.info(ScsbCasConstants.EXCEPTION, "SMS", e.getMessage());
-            }
         }
         return true;
     }
