@@ -48,7 +48,7 @@
   "phone" : {
     "@class" : "org.apereo.cas.acct.AccountRegistrationProperty",
     "name" : "phone",
-    "required" : false,
+    "required" : true,
     "label" : "cas.screen.acct.label.phone",
     "title" : "cas.screen.acct.title.phone",
     "pattern": "^(\\+\\d{1,2}\\s)?\\(?\\d{3}\\)?[\\s.-]\\d{3}[\\s.-]\\d{4}$",

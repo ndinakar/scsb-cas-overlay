@@ -28,8 +28,8 @@ import java.util.List;
 @Slf4j
 public class CustomCommunicationsManager implements CommunicationsManager {
 
-    private AmazonSNS snsClient;
-    private JavaMailSender javaMailSender;
+    private final AmazonSNS snsClient;
+    private final JavaMailSender javaMailSender;
     private final JdbcTemplate jdbcTemplate;
     private final String from;
     private final String mailSubject;
