@@ -129,7 +129,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
-        if (smsRequest.getPrincipal() == null) {
+        if (smsRequest.getPrincipal() != null) {
             List<String> phones = new ArrayList<>();
             String sqlMobile = ScsbCasConstants.SQL_MOBILE;
             String username = smsRequest.getPrincipal().getId();
