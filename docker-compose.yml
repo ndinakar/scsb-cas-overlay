@@ -1,0 +1,35 @@
+version: '3.8'
+
+services:
+  app:
+    build: .
+    image: scsb-cas-overlay
+    ports:
+      - "8443:8443"
+      - "8080:8080"
+    container_name: scsb-cas-overlay
+    volumes:
+      - ./cas.war:/app/scsb-cas-overlay.war
+    environment:
+      - JAVA_OPTS=-Xms1024m -Xmx1024m
+      - SERVER_SSL_ENABLED=false
+      - DB_HOST=${DB_HOST}
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
+      - MAIL_FROM=${MAIL_FROM}
+      - EMAIL_PASS=${EMAIL_PASS}
+      - EMAIL_USER=${EMAIL_USER}
+      - EMAIL_HOST=${EMAIL_HOST}
+      - DB_USER_TST=${DB_USER_TST}
+      - SNS_END_POINT=${SNS_END_POINT}
+      - SNS_SECRET=${SNS_SECRET}
+      - SNS_REGION=${SNS_REGION}
+      - SNS_ACCESS=${SNS_ACCESS}
+#      - JASYPT_ENCRYPTOR_PASSWORD=${JASYPT_ENCRYPTOR_PASSWORD}
+    restart: unless-stopped
+    networks:
+      - scsb
+
+networks:
+  scsb:
+    external: true 

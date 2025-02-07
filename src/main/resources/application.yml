@@ -1,0 +1,120 @@
+server:
+  port: 8080
+  ssl:
+    key-store: 'classpath:/etc/cas/thekeystore'
+    key-store-password: changeit
+cas:
+  service-registry:
+    json:
+      location: 'classpath:/etc/cas/services'
+      watcher-enabled: true
+  authn:
+    pm:
+      enabled: true
+      reset:
+        crypto:
+          enabled: false
+      core:
+        enabled: false
+    mfa:
+      simple:
+        token:
+          core:
+            time-to-kill-in-seconds: "60"
+            token-length: "6"
+        name: mfa-simple
+        order: '0'
+        mail:
+          priority: 1
+          text: Hello! Your requested CAS token is ${token}
+          subject: "[ReCAP] CAS login token"
+          attribute-name: email
+      triggers:
+        global:
+          global-provider-id: mfa-simple
+    accept:
+      users: null
+    jdbc:
+      'query[0]':
+        sql: SELECT password, email, phone FROM users WHERE username=? and active=1
+        url: ${DB_HOST}
+        dialect: org.hibernate.dialect.MySQLDialect
+        user: ${DB_USER}
+        password: ${DB_PASSWORD}
+        ddlAuto: none
+        driverClass: com.mysql.cj.jdbc.Driver
+        field-password: password
+        password-encoder:
+          type: DEFAULT
+          encoding-algorithm: MD5
+          character-encoding: UTF-8
+          secret: recap
+        attributes:
+          email: email
+          phone: phone
+  webflow:
+    auto-configuration:
+      order: '0'
+      enabled: 'true'
+  logout:
+    followServiceRedirects: true
+  httpWebRequest:
+    header:
+      xframe: true
+      xss: true
+spring:
+  mail:
+    host: ${EMAIL_HOST}
+    from: ${MAIL_FROM}
+    subject: "[ReCAP] CAS login token"
+    sqlQuery: "SELECT email FROM users WHERE username = ?"
+    username: ${EMAIL_USER}
+    protocol: smtp
+    password: ${EMAIL_PASS}
+    port: 587
+    testConnection: true
+    default-encoding: UTF-8
+    jndi-name: mail/Session
+    properties:
+      mail:
+        smtp:
+          auth: 'true'
+          enable: 'true'
+          starttls:
+            enable: 'true'
+  datasource:
+    username: ${DB_USER_TST}
+    url: ${DB_HOST}
+    password: ${DB_PASSWORD}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  thymeleaf:
+    enabled: true
+    cache: true
+    check-template: true
+    check-template-location: true
+    spring-el-compiler: false
+    encoding: UTF-8
+    mode: HTML
+  config:
+    import: optional:configserver:http://localhost:8888
+  cloud:
+    config:
+      fail-fast: true  # Fail startup if Config Server is unreachable
+logging:
+  level:
+    org:
+      apereo:
+        cas: DEBUG
+      springframework:
+        security: DEBUG
+aws:
+  sns:
+    region: ${SNS_REGION}
+    phone-number: ''
+  secretAccessKey: ${SNS_SECRET}
+  accessKeyId: ${SNS_ACCESS}
