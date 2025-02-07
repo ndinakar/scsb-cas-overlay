@@ -26,7 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
-public class CustomCustomCommunicationsManager implements CommunicationsManager {
+public class CustomCommunicationsManager implements CommunicationsManager {
 
     private AmazonSNS snsClient;
     private JavaMailSender javaMailSender;
@@ -35,7 +35,7 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     private final String mailSubject;
     private final String sqlQuery;
 
-    public CustomCustomCommunicationsManager(AmazonSNS snsClient, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
+    public CustomCommunicationsManager(AmazonSNS snsClient, JavaMailSender javaMailSender, JdbcTemplate jdbcTemplate, String from, String mailSubject, String sqlQuery) {
         this.javaMailSender = javaMailSender;
         this.jdbcTemplate = jdbcTemplate;
         this.from = from;
