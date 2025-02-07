@@ -20,6 +20,7 @@ public class User implements Serializable {
     private String username;
     private String password;
     private String email;
+    private String phone;
     private String firstName;
     private String lastName;
     @Column(name = "active")

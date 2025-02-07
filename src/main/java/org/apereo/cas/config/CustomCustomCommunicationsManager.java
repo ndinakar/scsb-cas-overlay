@@ -16,13 +16,13 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import util.MD5EncoderUtil;
+import util.ScsbCasConstants;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.ObjectInputStream;
 import java.nio.file.Files;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Slf4j
@@ -73,28 +73,28 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
     @Override
     public EmailCommunicationResult email(EmailMessageRequest emailRequest) {
         String username;
-        String tempDir = System.getProperty("java.io.tmpdir");
+        String tempDir = System.getProperty(ScsbCasConstants.DIR);
         User user = new User();
         if (emailRequest.getPrincipal() == null) {
             FileInputStream fis;
             try {
-                fis = new FileInputStream(tempDir+"user.ser");
+                fis = new FileInputStream(tempDir + ScsbCasConstants.SER);
                 ObjectInputStream ois = new ObjectInputStream(fis);
                 user = (User) ois.readObject();
                 ois.close();
-                File file = new File(tempDir+"user.ser");
+                File file = new File(tempDir + ScsbCasConstants.SER);
                 Files.deleteIfExists(file.toPath());
             } catch (Exception e) {
-                LOGGER.info("Exception occurred while User Registration");
+                LOGGER.info(ScsbCasConstants.EXCEPTION_USER_REGISTRATION, e.getMessage());
             }
             String sql = "INSERT INTO USERS " +
-                    "(USERNAME, PASSWORD,EMAIL,FIRSTNAME,LASTNAME) VALUES (?, ?,?, ?, ?)";
+                    "(USERNAME, PASSWORD, EMAIL, PHONE, FIRSTNAME, LASTNAME) VALUES (?, ?,?, ?, ?)";
             try {
                 jdbcTemplate.update(sql, new Object[]{user.getUsername(),
                         MD5EncoderUtil.getMD5EncodingString(user.getPassword()),
-                        user.getEmail(), user.getFirstName(), user.getLastName()});
+                        user.getEmail(), user.getPhone(), user.getFirstName(), user.getLastName()});
             } catch (DataAccessException e) {
-                LOGGER.info("Exception occurred while save user details:{}",e.getMessage());
+                LOGGER.info(ScsbCasConstants.EXCEPTION_SAVE_USER, e.getMessage());
             }
             return EmailCommunicationResult.builder().success(true).build();
         } else {
@@ -108,10 +108,10 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
                     (rs, rowNum) -> rs.getString("email")
             );
         } catch (Exception e) {
-            LOGGER.info("Exception occurred while pulling email for user: {}", username);
+            LOGGER.info(ScsbCasConstants.EXCEPTION_MESSAGE, "Email", username);
         }
         if (emails.isEmpty()) {
-            LOGGER.info("Email is  not available for user: {}", username);
+            LOGGER.info(ScsbCasConstants.NOT_AVAILABLE, "Email", username);
             return EmailCommunicationResult.builder().success(false).build();
         }
         SimpleMailMessage message = new SimpleMailMessage();
@@ -122,41 +122,39 @@ public class CustomCustomCommunicationsManager implements CommunicationsManager 
         try {
             javaMailSender.send(message);
         } catch (Exception e) {
-            LOGGER.info("Exception occurred while sending email to: {}, message is: {}", emails.get(0),e.getMessage());
+            LOGGER.info(ScsbCasConstants.EXCEPTION, "EMAIL", e.getMessage());
         }
         return EmailCommunicationResult.builder().success(true).build();
     }
 
     @Override
     public boolean sms(SmsRequest smsRequest) {
-        LOGGER.info("ATTRIBUTES are : {}", smsRequest.getPrincipal().getAttributes().getOrDefault("email", Collections.singletonList("email")));
         List<String> phones = new ArrayList<>();
-        String sql = "SELECT phone FROM users WHERE username = ?";
+        String sqlMobile = ScsbCasConstants.SQL_MOBILE;
         String username = smsRequest.getPrincipal().getId();
         if (null != username && !username.isEmpty()) {
             try {
                 phones = jdbcTemplate.query(
-                        sql,
+                        sqlMobile,
                         new Object[]{username},
                         (rs, rowNum) -> rs.getString("phone")
                 );
             } catch (Exception e) {
-                LOGGER.info("Exception occurred while pulling phone for user: {}", username);
+                LOGGER.info(ScsbCasConstants.EXCEPTION_MESSAGE, "Mobile Number", username);
             }
         }
         if (phones.isEmpty()) {
-            LOGGER.info("Mobile Number is not available for user: {}", username);
+            LOGGER.info(ScsbCasConstants.NOT_AVAILABLE, "Mobile Number", username);
             return true;
         } else {
             String fullPhoneNumber = phones.get(0);
             PublishRequest publishRequest = new PublishRequest()
-                    .withMessage("Hello! Your requested CAS token is " +smsRequest.getText())
+                    .withMessage("Hello! Your requested CAS token is " + smsRequest.getText())
                     .withPhoneNumber(fullPhoneNumber);
             try {
                 PublishResult result = snsClient.publish(publishRequest);
-                LOGGER.info("SMS sending to : {} and token is {}", fullPhoneNumber,smsRequest.getText());
             } catch (Exception e) {
-                LOGGER.info("Exception while sending SMS: {}", e.getMessage());
+                LOGGER.info(ScsbCasConstants.EXCEPTION, "SMS", e.getMessage());
             }
         }
         return true;
